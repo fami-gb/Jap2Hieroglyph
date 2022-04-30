@@ -78,7 +78,6 @@
             this.Controls.Add(this.lang_jap);
             this.Name = "Form1";
             this.Text = "Jap2Hieroglyph";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
