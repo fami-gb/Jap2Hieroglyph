@@ -130,60 +130,18 @@ namespace Jap2Hieroglyph
         {
             if (lang_hiero.ReadOnly == true) return;
 
-            string output = "";
-            string getHiero = "";
-            int rest_of_length = 0;
-            int strSize = MakeSizeEven(GetStrSize(lang_hiero.Text)); // 取得した文字列の長さを偶数に調整する。
-            
-            // ヒエログリフは一つで二文字分だから一つで一文字に調整、残りの記号などは
-            for (int i = 0; i < strSize / 2; i++)
-            {
-                rest_of_length = lang_hiero.Text.Length - (i * 2);
-                if (rest_of_length >= 6 && dic_hiero.ContainsValue(lang_hiero.Text.Substring(i * 2, 6)))
-                {
-                    // Convert from a hieroglyph consisting of three code-points to corresponded Japanese
-                    getHiero = lang_hiero.Text.Substring(i * 2, 2*3);
-                    i += 2;
-                }
-                else if (rest_of_length >= 4 && dic_hiero.ContainsValue(lang_hiero.Text.Substring(i * 2, 4)))
-                {
-                    // Convert from a hieroglyph consisting of two code-points to corresponded Japanese
-                    getHiero = lang_hiero.Text.Substring(i * 2, 2*2);
-                    i += 1;
-                }
-                else if (rest_of_length >= 2 && dic_hiero.ContainsValue(lang_hiero.Text.Substring(i * 2, 2)))
-                {
-                    // Convert from a hieroglyph consisting of one code-point to corresponded Japanese. 
-                    getHiero = lang_hiero.Text.Substring(i * 2, 2*1);
-                }
-                else
-                {
-                    getHiero = lang_hiero.Text.Substring(i, 1);
-                }
-
-                bool isHiero = dic_hiero.ContainsValue(getHiero);
-                output += isHiero ? dic_hiero.First(x => x.Value.Equals(getHiero)).Key : getHiero;
-            }
-            lang_jap.Text = output;
+            string hiero = lang_hiero.Text;
+            lang_hiero.ResetText();
+            //lang_hiero.Text = ToCodePoint(hiero);
         }
 
-        int GetStrSize(string str)
+        /*private string ToCodePoint(string hiero)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            return Encoding.GetEncoding(932).GetByteCount(str);
-        }
-
-        int MakeSizeEven(int size)
-        {
-            if (size == 1)
-                size += 1;
-            else
-            {
-                while (size % 2 == 0)
-                    size += 1;
-            }
-            return size;
-        }
+            todo:
+             ・まず文字列を受け取る際に、ヒエログリフに変換できない文字を取り除く。-> ifで変換の可不可を確認し取り除く。
+             ・変換方法は文字コードから上の辞書へ逆引きを行い変換。
+             
+        }*/
 
         private void btn_SwitchLang_Click(object sender, EventArgs e)
         {
