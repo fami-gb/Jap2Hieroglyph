@@ -4,7 +4,6 @@ using System.Text.Encodings;
 using System.Text;
 using System.Globalization;
 using System.Diagnostics;
-using WMPLib;
 
 namespace Jap2Hieroglyph
 {
@@ -15,104 +14,7 @@ namespace Jap2Hieroglyph
             InitializeComponent();
         }
 
-        readonly Dictionary<string, string> dic_hiero = new()
-        {
-            { "あ", "\U0001313f" },
-            { "い", "\U000131cc" },
-            { "う", "\U00013171" },
-            { "え", "\U000131cb" },
-            { "お", "\U0001336f" },
-
-            { "か", "\U000133a1\U0001313f" },
-            { "き", "\U000133a1\U000131cc" },
-            { "く", "\U000133a1\U00013171" },
-            { "け", "\U000133a1\U000131CB" },
-            { "こ", "\U000133a1\U0001336F" },
-
-            { "さ", "\U000132F4\U0001313f" },
-            { "し", "\U000132F4\U000131cc" },
-            { "す", "\U000132F4\U00013171" },
-            { "せ", "\U000132F4\U000131CB" },
-            { "そ", "\U000132F4\U0001336F" },
-
-            { "た", "\U000133CF\U0001313f" },
-            { "ち", "\U000133CF\U000131cc" },
-            { "つ", "\U000133CF\U00013171" },
-            { "て", "\U000133CF\U000131CB" },
-            { "と", "\U000133CF\U0001336F" },
-
-            { "な", "\U00013216\U0001313f" },
-            { "に", "\U00013216\U000131cc" },
-            { "ぬ", "\U00013216\U00013171" },
-            { "ね", "\U00013216\U000131CB" },
-            { "の", "\U00013216\U0001336F" },
-
-            { "は", "\U00013254\U0001313f" },
-            { "ひ", "\U00013254\U000131cc" },
-            { "ふ", "\U00013254\U00013171" },
-            { "へ", "\U00013254\U000131CB" },
-            { "ほ", "\U00013254\U0001336F" },
-
-            { "ま", "\U00013153\U0001313f" },
-            { "み", "\U00013153\U000131cc" },
-            { "む", "\U00013153\U00013171" },
-            { "め", "\U00013153\U000131CB" },
-            { "も", "\U00013153\U0001336F" },
-
-            { "ら", "\U0001308B\U0001313f" },
-            { "り", "\U0001308B\U000131cc" },
-            { "る", "\U0001308B\U00013171" },
-            { "れ", "\U0001308B\U000131CB" },
-            { "ろ", "\U0001308B\U0001336F" },
-
-            { "や", "\U000131CC\U0001313F" },
-            { "ゆ", "\U000131CC\U00013171" },
-            { "よ", "\U000131CC\U0001336F" },
-
-            { "わ", "\U00013171\U0001313F" },
-            { "を", "\U0001336F" },
-            { "ん", "\U00013216" },
-
-            { "が", "\U000133BC\U0001313F" },
-            { "ぎ", "\U000133BC\U000131CC" },
-            { "ぐ", "\U000133BC\U00013171" },
-            { "げ", "\U000133BC\U000131CB" },
-            { "ご", "\U000133BC\U0001336F" },
-
-            { "ざ", "\U00013283\U0001313F" },
-            { "じ", "\U00013283\U000131CC" },
-            { "ず", "\U00013283\U00013171" },
-            { "ぜ", "\U00013283\U000131CB" },
-            { "ぞ", "\U00013283\U0001336F" },
-
-            { "だ", "\U000130A9\U0001313F" },
-            { "ぢ", "\U000130A9\U000131CC" },
-            { "づ", "\U000130A9\U00013171" },
-            { "で", "\U000130A9\U000131CB" },
-            { "ど", "\U000130A9\U0001336F" },
-
-            { "ば", "\U000130C0\U0001313F" },
-            { "び", "\U000130C0\U000131CC" },
-            { "ぶ", "\U000130C0\U00013171" },
-            { "べ", "\U000130C0\U000131CB" },
-            { "ぼ", "\U000130C0\U0001336F" },
-
-            { "ぱ", "\U000132AA\U0001313F" },
-            { "ぴ", "\U000132AA\U000131CC" },
-            { "ぷ", "\U000132AA\U00013171" },
-            { "ぺ", "\U000132AA\U000131CB" },
-            { "ぽ", "\U000132AA\U0001336F" },
-
-            { "ぁ", "\U000130ED\U0001313f" },
-            { "ぃ", "\U000130ED\U000131cc" },
-            { "ぅ", "\U000130ED\U00013171" },
-            { "ぇ", "\U000130ED\U000131cb" },
-            { "ぉ", "\U000130ED\U0001336f" },
-            { "ゃ", "\U000130ED\U000131CC\U0001313F" },
-            { "ゅ", "\U000130ED\U000131CC\U00013171" },
-            { "ょ", "\U000130ED\U000131CC\U0001336F" },
-            { "っ", "\U000130ED\U000133cf\U00013362" },
-        };
+         Hieroglyph Hiero = new Hieroglyph();
 
         private void lang_jap_TextChanged(object sender, EventArgs e)
         {
@@ -120,8 +22,8 @@ namespace Jap2Hieroglyph
             string output = "";
             foreach (char c in lang_jap.Text)
             {
-                bool canConvert = dic_hiero.ContainsKey(c.ToString());
-                output += canConvert ? dic_hiero[c.ToString()] : c.ToString();
+                bool canConvert = Hiero.dic_hiero.ContainsKey(c.ToString());
+                output += canConvert ? Hiero.dic_hiero[c.ToString()] : c.ToString();
             }
             lang_hiero.Text = output;
         }
@@ -129,10 +31,48 @@ namespace Jap2Hieroglyph
         private void lang_hiero_TextChanged(object sender, EventArgs e)
         {
             if (lang_hiero.ReadOnly == true) return;
+            string getHiero = "";
+            StringBuilder output = new StringBuilder();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding shiftjisEnco = Encoding.GetEncoding("shift_jis");
+            int HieroByteCount = shiftjisEnco.GetByteCount("𓄿");
+            int CurrentIndex = 0;
+            int i = 0;
 
-            string hiero = lang_hiero.Text;
-            lang_hiero.ResetText();
-            //lang_hiero.Text = ToCodePoint(hiero);
+            while (i < lang_hiero.Text.Length/HieroByteCount)
+            {
+                // ヒエログリフは最大三つのコードポイントで構成されているため、総当たりで変換できるか確認する。
+                if (isJapContained(CurrentIndex, HieroByteCount)) // 1つのコードポイントで構成される場合
+                {
+                    getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*1);
+                    CurrentIndex += HieroByteCount;
+                }
+                else if (isJapContained(CurrentIndex, HieroByteCount*2)) // 2つのコードポイントで構成される場合
+                {
+                    getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*2);
+                    CurrentIndex += HieroByteCount*2;
+                }
+                else if (isJapContained(CurrentIndex, HieroByteCount*3)) // 3つのコードポイントで構成される場合
+                {
+                    getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*3);
+                    CurrentIndex += HieroByteCount*3;
+                }
+
+                // 取得した日本語が辞書に存在するか確認し、存在する場合はヒエログリフに変換する
+                if (Hiero.dic_hiero.ContainsValue(getHiero))
+                {
+                    output.Append(Hiero.dic_hiero.First(x => x.Value.Equals(getHiero)).Key);
+                }
+                else
+                    output.Append(getHiero);
+                i++;
+            }
+            lang_jap.Text = output.ToString();
+        }
+
+        bool isJapContained(int startIndex, int length)
+        {
+            return Hiero.dic_hiero.ContainsValue(lang_hiero.Text.Substring(startIndex, length));
         }
 
         /*private string ToCodePoint(string hiero)
