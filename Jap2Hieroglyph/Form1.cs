@@ -55,17 +55,17 @@ namespace Jap2Hieroglyph
                     getHiero = lang_hiero.Text.Substring(CurrentIndex, 2);
                     CurrentIndex += 2;
                 }
-                else if (isJapContained(CurrentIndex, HieroByteCount)) // 1つのコードポイントで構成される場合
+                else if (isConvert2Hiero(CurrentIndex, HieroByteCount)) // 1つのコードポイントで構成される場合
                 {
                     getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*1);
                     CurrentIndex += HieroByteCount;
                 }
-                else if (isJapContained(CurrentIndex, HieroByteCount*2)) // 2つのコードポイントで構成される場合
+                else if (isConvert2Hiero(CurrentIndex, HieroByteCount*2)) // 2つのコードポイントで構成される場合
                 {
                     getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*2);
                     CurrentIndex += HieroByteCount*2;
                 }
-                else if (isJapContained(CurrentIndex, HieroByteCount*3)) // 3つのコードポイントで構成される場合
+                else if (isConvert2Hiero(CurrentIndex, HieroByteCount*3)) // 3つのコードポイントで構成される場合
                 {
                     getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*3);
                     CurrentIndex += HieroByteCount*3;
@@ -73,9 +73,7 @@ namespace Jap2Hieroglyph
 
                 // 取得した日本語が辞書に存在するか確認し、存在する場合はヒエログリフに変換する
                 if (Hiero.dic_hiero.ContainsValue(getHiero))
-                {
                     output.Append(Hiero.dic_hiero.First(x => x.Value.Equals(getHiero)).Key);
-                }
                 else
                     output.Append(getHiero);
                 i++;
@@ -83,7 +81,7 @@ namespace Jap2Hieroglyph
             lang_jap.Text = output.ToString();
         }
 
-        bool isJapContained(int startIndex, int length)
+        bool isConvert2Hiero(int startIndex, int length)
         {
             return Hiero.dic_hiero.ContainsValue(lang_hiero.Text.Substring(startIndex, length));
         }
