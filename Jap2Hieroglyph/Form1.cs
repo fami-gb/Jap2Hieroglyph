@@ -4,6 +4,7 @@ using System.Text.Encodings;
 using System.Text;
 using System.Globalization;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Jap2Hieroglyph
 {
@@ -38,11 +39,23 @@ namespace Jap2Hieroglyph
             int HieroByteCount = shiftjisEnco.GetByteCount("𓄿");
             int CurrentIndex = 0;
             int i = 0;
+            int NumCnt = lang_hiero.Text.Count(char.IsDigit);
+            int AlphabetCnt = lang_hiero.Text.Count(c => (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
 
-            while (i < lang_hiero.Text.Length/HieroByteCount)
+            while (i < (lang_hiero.Text.Length + NumCnt + AlphabetCnt)/HieroByteCount)
             {
                 // ヒエログリフは最大三つのコードポイントで構成されているため、総当たりで変換できるか確認する。
-                if (isJapContained(CurrentIndex, HieroByteCount)) // 1つのコードポイントで構成される場合
+                if (Contains1byteChar(lang_hiero.Text.Substring(CurrentIndex, 1))) // 数字orアルファベットかどうか
+                {
+                    getHiero = lang_hiero.Text.Substring(CurrentIndex, 1); 
+                    CurrentIndex++;
+                }
+                else if (ContainsJap(lang_hiero.Text.Substring(CurrentIndex, 2))) // 日本語かどうか
+                {
+                    getHiero = lang_hiero.Text.Substring(CurrentIndex, 2);
+                    CurrentIndex += 2;
+                }
+                else if (isJapContained(CurrentIndex, HieroByteCount)) // 1つのコードポイントで構成される場合
                 {
                     getHiero = lang_hiero.Text.Substring(CurrentIndex, HieroByteCount*1);
                     CurrentIndex += HieroByteCount;
@@ -73,6 +86,33 @@ namespace Jap2Hieroglyph
         bool isJapContained(int startIndex, int length)
         {
             return Hiero.dic_hiero.ContainsValue(lang_hiero.Text.Substring(startIndex, length));
+        }
+
+        bool ContainsJap(string str)
+        {
+            // 漢字の範囲を定義する正規表現パターン
+            string patternKanji = @"\p{IsCJKUnifiedIdeographs}";
+            // ひらがなの正規表現パターン
+            string patternHiragana = "[\u3040-\u309F]";
+            // カタカナの正規表現パターン
+            string patternKatakana = "[\u30A0-\u30FF]";
+
+            // 正規表現を使用して一致を確認
+            return Regex.IsMatch(str, patternKanji)    ||
+                   Regex.IsMatch(str, patternHiragana) ||
+                   Regex.IsMatch(str, patternKatakana);
+        }
+
+        bool Contains1byteChar(string str)
+        {
+            // アルファベットの正規表現パターン
+            string patternAlphabet = "[A-Za-z]";
+            // 数字の正規表現パターン
+            string patternNum = "[0-9]";
+
+            // 正規表現を使用して一致を確認
+            return Regex.IsMatch(str, patternAlphabet) ||
+                   Regex.IsMatch(str, patternNum);
         }
 
         /*private string ToCodePoint(string hiero)
